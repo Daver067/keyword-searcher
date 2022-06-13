@@ -1,19 +1,51 @@
+@import "./scss/keywordModule";
+@import "./scss/variablesAndFunctions";
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+$footerBackground: black;
+$font-weights: (
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "bold": 700,
+);
+
+@function weight($weight-name) {
+  @return map-get($map: $font-weights, $key: $weight-name);
+}
+
 header {
-  position: fixed;
+  @include flexCenter(row);
+  position: relative;
   top: 0;
   left: 0;
   width: 100vw;
   height: 10vh;
   background-color: rgb(184, 182, 182);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: xx-large;
-  font-weight: bolder;
+  font-weight: weight(bold);
+}
+
+#display {
+  position: relative;
+  width: 100vw;
+  height: 85vh;
+  background-color: antiquewhite;
+}
+
+.footer {
+  @include flexCenter(row);
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 5vh;
+  background-color: $footerBackground;
+  color: white;
+  font-weight: weight(light);
+  font-size: x-small;
 }

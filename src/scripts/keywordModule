@@ -1,0 +1,26 @@
+import { createNewElement } from "..";
+
+const body = document.querySelector("body");
+function createButton(id) {
+  let btn = createNewElement("button");
+  btn.id = `module${id}`;
+  btn.textContent = `${id}`;
+  return btn;
+}
+
+function renderModule() {
+  const moduleBackground = createNewElement("div", "moduleBackground", "");
+  const module = createNewElement(
+    "div",
+    "module",
+    `<div><label for="companyName">Company Name:</label><input type="text" name="companyName" id="companyName"></div><div><label for="keywords">Enter keywords, separated by line break (press enter)</label><textarea name="keywords"id="keywords"placeholder="keyword one &#10keyword two &#10keyword three &#10etc.."></textarea></div>`
+  );
+  const buttons = createNewElement("div", "buttons", "");
+  buttons.appendChild(createButton("Ok"));
+  buttons.appendChild(createButton("Cancel"));
+  module.appendChild(buttons);
+  moduleBackground.appendChild(module);
+  body.appendChild(moduleBackground);
+}
+
+export { renderModule };

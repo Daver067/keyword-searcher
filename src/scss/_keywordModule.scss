@@ -1,0 +1,48 @@
+@import "./variablesAndFunctions";
+
+.moduleBackground {
+  @include flexCenter(row);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.module {
+  font-size: larger;
+  background-color: white;
+  height: 75vh;
+  width: 75vw;
+  color: black;
+  padding: 10px;
+  line-height: 2rem;
+  div {
+    display: block;
+    label {
+      display: block;
+    }
+    input {
+      height: 1.75rem;
+      width: 80%;
+      margin-bottom: 2rem;
+    }
+    textarea {
+      padding: 5px;
+      resize: none;
+      width: calc(100% - 10px);
+      height: 35em;
+    }
+    button {
+      width: 10rem;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}
