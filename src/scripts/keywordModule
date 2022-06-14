@@ -1,13 +1,73 @@
 import { createNewElement } from "..";
+import { keyword } from "./keywordClass";
 
+//  where all the keywords are stored after hitting ok
+let allKeywords = [];
 const body = document.querySelector("body");
+
+//  makes either an ok or cancel button
 function createButton(id) {
-  let btn = createNewElement("button");
+  const btn = createNewElement("button");
   btn.id = `module${id}`;
   btn.textContent = `${id}`;
   return btn;
 }
 
+//  makes ok button and adds its listener
+function okButton() {
+  const btn = createButton("Ok");
+  btn.addEventListener("click", clickedOk);
+  return btn;
+}
+
+// removed blank accidental keywords
+function removeBlankKeywords(keywordsArray) {
+  for (let i = 0; i < keywordsArray.length; i++) {
+    let regEx = /[a-z]|[A-Z]/;
+    if (keywordsArray[i].match(regEx)) {
+    } else {
+      keywordsArray.splice(i, 1);
+      i--;
+    }
+  }
+  return keywordsArray;
+}
+
+//  creates keyword classes for each keyword in the input
+function keywordClasses(keywordArray) {
+  const newArray = [];
+  keywordArray.forEach((keywordListed) => {
+    const keywordClass = new keyword(keywordListed);
+    newArray.push(keywordClass);
+  });
+  return newArray;
+}
+
+// event listener for clicking ok button
+function clickedOk() {
+  const keywordsTextArea = document.getElementById("keywords");
+  const newKeywords = keywordsTextArea.value;
+  allKeywords = newKeywords.split("\n");
+  removeBlankKeywords(allKeywords);
+  allKeywords = keywordClasses(allKeywords);
+  console.log(allKeywords);
+  clickedCancel();
+}
+
+//  makes cancel button and adds its listener
+function cancelButton() {
+  const btn = createButton("Cancel");
+  btn.addEventListener("click", clickedCancel);
+  return btn;
+}
+
+// event listener for clicking ok button
+function clickedCancel() {
+  const moduleBackground = document.querySelector(".moduleBackground");
+  body.removeChild(moduleBackground);
+}
+
+//  renders the module to enter keywords.
 function renderModule() {
   const moduleBackground = createNewElement("div", "moduleBackground", "");
   const module = createNewElement(
@@ -16,8 +76,8 @@ function renderModule() {
     `<div><label for="companyName">Company Name:</label><input type="text" name="companyName" id="companyName"></div><div><label for="keywords">Enter keywords, separated by line break (press enter)</label><textarea name="keywords"id="keywords"placeholder="keyword one &#10keyword two &#10keyword three &#10etc.."></textarea></div>`
   );
   const buttons = createNewElement("div", "buttons", "");
-  buttons.appendChild(createButton("Ok"));
-  buttons.appendChild(createButton("Cancel"));
+  buttons.appendChild(okButton());
+  buttons.appendChild(cancelButton());
   module.appendChild(buttons);
   moduleBackground.appendChild(module);
   body.appendChild(moduleBackground);
