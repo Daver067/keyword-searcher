@@ -1,17 +1,27 @@
 class keyword {
   constructor(name) {
     this.keyword = name;
-    this.regEx = new RegExp(`${keyword}`, `gmi`);
-    this.matches = [];
+    this.numberOfMatches = null;
   }
 
-  getMatches = (string) => {
-    this.matches = string.matches(this.regEx);
-  };
+  get name() {
+    return this.keyword;
+  }
 
-  countMatches = () => {
-    return this.matches.length;
-  };
+  set matches(num) {
+    if (num === null) {
+      num = 0;
+    }
+    this.numberOfMatches = num;
+  }
+
+  get matches() {
+    return this.numberOfMatches;
+  }
+
+  get matchString() {
+    return `${this.keyword} was matched ${this.numberOfMatches} times in the article`;
+  }
 }
 
 export { keyword };

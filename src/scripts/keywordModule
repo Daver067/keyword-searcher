@@ -4,6 +4,7 @@ import { keyword } from "./keywordClass";
 //  where all the keywords are stored after hitting ok
 let allKeywords = [];
 const body = document.querySelector("body");
+const bodyKeywords = document.querySelector(".mainKeywords");
 
 //  makes either an ok or cancel button
 function createButton(id) {
@@ -43,6 +44,14 @@ function keywordClasses(keywordArray) {
   return newArray;
 }
 
+function justKeywordNames(objectArray) {
+  let keywordNameArray = [];
+  objectArray.forEach((keyword) => {
+    keywordNameArray.push(` ${keyword.keyword}`);
+  });
+  return keywordNameArray;
+}
+
 // event listener for clicking ok button
 function clickedOk() {
   const keywordsTextArea = document.getElementById("keywords");
@@ -50,7 +59,7 @@ function clickedOk() {
   allKeywords = newKeywords.split("\n");
   removeBlankKeywords(allKeywords);
   allKeywords = keywordClasses(allKeywords);
-  console.log(allKeywords);
+  bodyKeywords.textContent = justKeywordNames(allKeywords);
   clickedCancel();
 }
 
@@ -83,4 +92,4 @@ function renderModule() {
   body.appendChild(moduleBackground);
 }
 
-export { renderModule };
+export { renderModule, allKeywords };

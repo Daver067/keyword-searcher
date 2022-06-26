@@ -1,14 +1,31 @@
 import "./style.scss";
 import { renderModule } from "./scripts/keywordModule";
+import { renderModuleSearch } from "./scripts/searchDocumentModule";
+import { addResultsBtn } from "./scripts/results";
 
 const display = document.getElementById("display");
+const buttonArea = document.querySelector(".commandBtns");
+
+// renders the module to add keywords
 function openModuleAddKeywords() {
   renderModule();
 }
+// renders the module to add search document
+function openModuleSearchDocument() {
+  renderModuleSearch();
+}
 
+// adds event listener to open module to add keywords to said button
 function moduleBtnEventListener(Btn) {
   Btn.addEventListener("click", openModuleAddKeywords);
 }
+
+// adds event listener to open module to add the document to search
+function searchDocumentBtnListener(Btn) {
+  Btn.addEventListener("click", openModuleSearchDocument);
+}
+
+// function to easily create new elements with classes and inner HTML
 function createNewElement(type, addClass, innerHTML) {
   const domElement = document.createElement(type);
   domElement.classList.add(addClass);
@@ -16,6 +33,7 @@ function createNewElement(type, addClass, innerHTML) {
   return domElement;
 }
 
+// creates the add module button for keywords
 function addModuleBtn() {
   const moduleBtn = createNewElement(
     "button",
@@ -23,9 +41,22 @@ function addModuleBtn() {
     "Click me to add keywords!"
   );
   moduleBtnEventListener(moduleBtn);
-  display.appendChild(moduleBtn);
+  buttonArea.appendChild(moduleBtn);
+}
+
+// creates the add module button for document to searcg through
+function addModuleBtnSearchDocument() {
+  const moduleBtn = createNewElement(
+    "button",
+    "moduleBtn",
+    "Click me to add text to search!"
+  );
+  searchDocumentBtnListener(moduleBtn);
+  buttonArea.appendChild(moduleBtn);
 }
 
 export { createNewElement };
 
 addModuleBtn();
+addModuleBtnSearchDocument();
+addResultsBtn();
