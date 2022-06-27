@@ -2,6 +2,7 @@ import { createNewElement } from "..";
 import { keyword } from "./keywordClass";
 
 //  where all the keywords are stored after hitting ok
+let theCompanyName;
 let allKeywords = [];
 const body = document.querySelector("body");
 const bodyKeywords = document.querySelector(".mainKeywords");
@@ -47,19 +48,35 @@ function keywordClasses(keywordArray) {
 function justKeywordNames(objectArray) {
   let keywordNameArray = [];
   objectArray.forEach((keyword) => {
-    keywordNameArray.push(` ${keyword.keyword}`);
+    keywordNameArray.push(` ${keyword.name}`);
   });
   return keywordNameArray;
 }
-
-// event listener for clicking ok button
-function clickedOk() {
+// gets keywords and formats them correctly when pressing ok button
+function formatKeywords() {
   const keywordsTextArea = document.getElementById("keywords");
   const newKeywords = keywordsTextArea.value;
   allKeywords = newKeywords.split("\n");
   removeBlankKeywords(allKeywords);
   allKeywords = keywordClasses(allKeywords);
   bodyKeywords.textContent = justKeywordNames(allKeywords);
+}
+
+// gets company name info and formats it correctly for searching
+function formatCompanyName() {
+  let companyName = document.getElementById("companyName").value;
+  if (companyName.length <= 1) {
+    companyName = "No Name Defined";
+  }
+  theCompanyName = new keyword(companyName);
+  document.querySelector(".companyNameKeyword").textContent =
+    theCompanyName.name;
+}
+
+// event listener for clicking ok button
+function clickedOk() {
+  formatKeywords();
+  formatCompanyName();
   clickedCancel();
 }
 
@@ -92,4 +109,4 @@ function renderModule() {
   body.appendChild(moduleBackground);
 }
 
-export { renderModule, allKeywords };
+export { renderModule, allKeywords, theCompanyName };

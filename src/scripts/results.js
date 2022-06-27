@@ -1,22 +1,17 @@
 import { createNewElement } from "..";
+import { theCompanyName } from "./keywordModule";
 import { allKeywords } from "./keywordModule";
+import { metaDescriptionString } from "./metaDescription";
 import { searchString } from "./searchDocumentModule";
 
-// testing a function to copy array
+//  function to copy array and be able to alter the second array without altering the first.
 function copy(aObject) {
-  // Prevent undefined objects
-  // if (!aObject) return aObject;
-
   let bObject = Array.isArray(aObject) ? [] : {};
-
   let value;
   for (const key in aObject) {
-    // Prevent self-references to parent object
-    // if (Object.is(aObject[key], aObject)) continue;
     value = aObject[key];
     bObject[key] = typeof value === "object" ? copy(value) : value;
   }
-
   return bObject;
 }
 
@@ -45,20 +40,6 @@ function removeDuplicates(array) {
   return returnedArray;
 }
 
-// searches for matches and returns an array with all the matches
-function doTheSearch() {
-  const matches = [];
-  allKeywords.forEach((element) => {
-    const thisRegex = new RegExp(`${element.keyword}`, `gmi`);
-    const newMatches = searchString.match(thisRegex);
-    matches.push(newMatches);
-  });
-  let removedMatches = removeDuplicates(matches);
-  addNumberOfMatchesToKeywordClasses(removedMatches);
-
-  return removedMatches;
-}
-
 // updates keyword classes with proper number of matches
 function addNumberOfMatchesToKeywordClasses(array) {
   let arrayIndex = 0;
@@ -72,9 +53,45 @@ function addNumberOfMatchesToKeywordClasses(array) {
   });
 }
 
+// searches for matches and returns an array with all the matches
+function searchForKeywords() {
+  const matches = [];
+  allKeywords.forEach((element) => {
+    const thisRegex = new RegExp(`${element.keyword}`, `gmi`);
+    const newMatches = searchString.match(thisRegex);
+    matches.push(newMatches);
+  });
+  let removedMatches = removeDuplicates(matches);
+  addNumberOfMatchesToKeywordClasses(removedMatches);
+}
+
+// searches for matches of the company name
+function searchForCompanyName() {
+  const thisregEx = new RegExp(`${theCompanyName.name}`, "gmi");
+  let matches = searchString.match(thisregEx);
+  if (matches === null) {
+    matches = 0;
+  }
+  return matches;
+}
+
+// word counting function
+function wordCounter() {
+  return searchString.match(/\b\S+\b/g || []).length;
+}
+
+// character counting function for meta description
+function characterCounter(string) {
+  const array = string.split("");
+  return array.length;
+}
+
 // renders the results when the button is clicked
 function renderResults() {
-  let matches = doTheSearch();
+  searchForKeywords();
+  let companyNameMatches = searchForCompanyName();
+  const numOfWords = wordCounter();
+  const metaCharLength = characterCounter(metaDescriptionString);
   const keywordArray = ["Keyword Used"];
   const keywordResultArray = ["Number of Times Used"];
   allKeywords.forEach((keyword) => {
@@ -85,6 +102,15 @@ function renderResults() {
     keywordArray.join("\r\n");
   document.querySelector(".resultsParagraphNumbers").textContent =
     keywordResultArray.join("\r\n");
+  document.querySelector(
+    ".resultsParagraphCompanyName"
+  ).textContent = `Company Name: *${theCompanyName.name}* is used ${companyNameMatches.length} times`;
+  document.querySelector(
+    ".resultsParagraphWordCount"
+  ).textContent = `WordCount for the document is: ${numOfWords}`;
+  document.querySelector(
+    ".resultsParagraphMetaChars"
+  ).textContent = `The Meta Description contains: ${metaCharLength} characters.`;
 }
 
 // adds the event listener to the result button

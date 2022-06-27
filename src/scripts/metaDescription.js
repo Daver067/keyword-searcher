@@ -1,21 +1,14 @@
 import { createNewElement } from "..";
 
 const body = document.querySelector("body");
-const searchBody = document.querySelector(".mainSearchText");
-let searchString = "";
+const metaBody = document.querySelector(".metaDescriptionText");
+let metaDescriptionString;
 
 //  makes either an ok or cancel button
 function createButton(id) {
   const btn = createNewElement("button");
   btn.id = `module${id}`;
   btn.textContent = `${id}`;
-  return btn;
-}
-
-//  makes ok button and adds its listener
-function okButton() {
-  const btn = createButton("Ok");
-  btn.addEventListener("click", clickedOk);
   return btn;
 }
 
@@ -27,10 +20,10 @@ function clickedCancel() {
 
 // event listener for clicking ok button
 function clickedOk() {
-  searchString = "";
-  const searchTextArea = document.getElementById("search").value;
-  searchString = searchTextArea;
-  searchBody.textContent = searchString;
+  metaDescriptionString = "";
+  metaDescriptionString = document.getElementById("meta").value;
+  metaBody.textContent = metaDescriptionString;
+
   clickedCancel();
 }
 
@@ -41,13 +34,20 @@ function cancelButton() {
   return btn;
 }
 
+//  makes ok button and adds its listener
+function okButton() {
+  const btn = createButton("Ok");
+  btn.addEventListener("click", clickedOk);
+  return btn;
+}
+
 //  renders the module to enter keywords.
-function renderModuleSearch() {
+function renderModuleMetaDescription() {
   const moduleBackground = createNewElement("div", "moduleBackground", "");
   const module = createNewElement(
     "div",
-    "module-search",
-    `<textarea name="search" id="search" placeholder="paste document to search in here and press OK"></textarea>`
+    "module-meta",
+    `<textarea name="meta" id="meta" placeholder="paste Meta Description here and press OK"></textarea>`
   );
   const buttons = createNewElement("div", "buttons", "");
   buttons.appendChild(okButton());
@@ -57,4 +57,4 @@ function renderModuleSearch() {
   body.appendChild(moduleBackground);
 }
 
-export { renderModuleSearch, searchString };
+export { renderModuleMetaDescription, metaDescriptionString };

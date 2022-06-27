@@ -1,6 +1,7 @@
 @import "./scss/keywordModule";
 @import "./scss/variablesAndFunctions";
 @import "./scss/searchModule";
+@import "./scss/moduleMetaDescription";
 * {
   box-sizing: border-box;
   margin: 0;
@@ -50,13 +51,23 @@ header {
     margin: 10px;
   }
 }
+.companyName {
+  padding: 10px;
+  line-height: 1.5;
+}
+
 .keywordsToSearch {
-  padding-left: 8px;
+  padding: 10px;
   line-height: 1.5;
 }
 
 .docToSearch {
-  padding-left: 8px;
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.metaDescription {
+  padding: 10px;
   line-height: 1.5;
 }
 
@@ -76,17 +87,32 @@ header {
 }
 .resultsParagraphDiv {
   display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 25px;
-  .resultsParagraphKeywords {
+  justify-content: center;
+  padding-bottom: 25px;
+  p {
     white-space: pre;
     line-height: 1.5;
-    padding-left: 15px;
+  }
+  .resultsParagraphKeywords {
+    text-align: right;
   }
 
   .resultsParagraphNumbers {
+    padding-left: 10px;
+  }
+  .resultsParagraphCompanyName {
+    padding-left: 10px;
+  }
+}
+
+.resultsParagraphDivTwo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 25px;
+  p {
     white-space: pre;
     line-height: 1.5;
-    padding-left: 15px;
   }
 }
