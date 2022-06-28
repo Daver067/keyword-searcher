@@ -15,6 +15,38 @@ function copy(aObject) {
   return bObject;
 }
 
+// check to see if there were any filler words used inbetween the keywords
+function checkForFillerWords() {
+  let keywordsWithFillers = addFillerRegex();
+  let matches = [];
+  keywordsWithFillers.forEach((keyword) => {
+    const regEx = new RegExp(`${keyword}`, "gmi");
+    let newMatches = searchString.match(regEx);
+    if (newMatches === null) {
+      newMatches = [];
+    }
+    matches.push(newMatches.length);
+  });
+  return matches;
+}
+// adds filler word regex into the keywords
+function addFillerRegex() {
+  let keywordsWithFillers = [];
+  allKeywords.forEach((keyword) => {
+    let thisKeyword = keyword.name;
+    let thisKeywordArray = thisKeyword.split(" ");
+    const keywordArrayLength = thisKeywordArray.length;
+    if (keywordArrayLength === 1) {
+      return;
+    }
+    for (let i = keywordArrayLength - 1; i > 0; i--) {
+      thisKeywordArray.splice(i, 0, `(\\b\\w{0,25}\\b)?`);
+    }
+    keywordsWithFillers.push(thisKeywordArray.join("\\s?"));
+  });
+  return keywordsWithFillers;
+}
+
 // if any keywords contain the same phrase as another keyword this function will subtract the extrta matches out.
 function removeDuplicates(array) {
   let returnedArray = copy(array);
@@ -63,6 +95,7 @@ function searchForKeywords() {
   });
   let removedMatches = removeDuplicates(matches);
   addNumberOfMatchesToKeywordClasses(removedMatches);
+  return matches;
 }
 
 // searches for matches of the company name
@@ -85,15 +118,35 @@ function characterCounter(string) {
   const array = string.split("");
   return array.length;
 }
+// function to remove the matches that were found without filler words from the filler word list.
+function subtractActualMatchFromFillers(actualMatchArray, FillerNumArray) {
+  for (let i = 0; i < actualMatchArray.length; i++) {
+    if (actualMatchArray[i] === null) {
+      continue;
+    }
+    FillerNumArray[i] -= actualMatchArray[i].length;
+  }
+  return FillerNumArray;
+}
 
 // renders the results when the button is clicked
 function renderResults() {
-  searchForKeywords();
+  const matchesFoundList = searchForKeywords();
+  let fillerMatchesCount = checkForFillerWords();
+  let fillerMatchesLessActualMatches = subtractActualMatchFromFillers(
+    matchesFoundList,
+    fillerMatchesCount
+  );
   let companyNameMatches = searchForCompanyName();
   const numOfWords = wordCounter();
   const metaCharLength = characterCounter(metaDescriptionString);
+  fillerMatchesLessActualMatches.splice(
+    0,
+    0,
+    "Additional Times Used With a Filler Word"
+  );
   const keywordArray = ["Keyword Used"];
-  const keywordResultArray = ["Number of Times Used"];
+  const keywordResultArray = ["Number of Times Used Independently"];
   allKeywords.forEach((keyword) => {
     keywordArray.push(keyword.name);
     keywordResultArray.push(keyword.matches);
@@ -111,6 +164,8 @@ function renderResults() {
   document.querySelector(
     ".resultsParagraphMetaChars"
   ).textContent = `The Meta Description contains: ${metaCharLength} characters.`;
+  document.querySelector(".resultsParagraphFillerNumbers").textContent =
+    fillerMatchesLessActualMatches.join("\r\n");
 }
 
 // adds the event listener to the result button
