@@ -37,6 +37,7 @@ function addFillerRegex() {
     let thisKeywordArray = thisKeyword.split(" ");
     const keywordArrayLength = thisKeywordArray.length;
     if (keywordArrayLength === 1) {
+      keywordsWithFillers.push(thisKeywordArray.join(""));
       return;
     }
     for (let i = keywordArrayLength - 1; i > 0; i--) {
