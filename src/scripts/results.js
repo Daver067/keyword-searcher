@@ -6,7 +6,7 @@ import { searchString } from "./searchDocumentModule";
 
 //  function to copy array and be able to alter the second array without altering the first.
 function copy(aObject) {
-  let bObject = Array.isArray(aObject) ? [] : {};
+  let bObject = Array.isArray(aObject) ? [] : null;
   let value;
   for (const key in aObject) {
     value = aObject[key];
@@ -54,6 +54,7 @@ function removeDuplicates(array) {
   let innerArrayIndex = 0;
   array.forEach((innerArray) => {
     if (innerArray === null) {
+      innerArrayIndex++;
       return;
     }
     for (let i = 0; i < array.length; i++) {
@@ -77,7 +78,7 @@ function removeDuplicates(array) {
 function addNumberOfMatchesToKeywordClasses(array) {
   let arrayIndex = 0;
   allKeywords.forEach((keyword) => {
-    if (array[arrayIndex].length === undefined) {
+    if (array[arrayIndex] === null) {
       keyword.matches = 0;
     } else {
       keyword.matches = array[arrayIndex].length;
@@ -93,6 +94,7 @@ function searchForKeywords() {
     const thisRegex = new RegExp(`${element.keyword}`, `gmi`);
     const newMatches = searchString.match(thisRegex);
     matches.push(newMatches);
+    console.log(newMatches); ///////////////////////////TEST
   });
   let removedMatches = removeDuplicates(matches);
   addNumberOfMatchesToKeywordClasses(removedMatches);
@@ -129,6 +131,26 @@ function subtractActualMatchFromFillers(actualMatchArray, FillerNumArray) {
   }
   return FillerNumArray;
 }
+// Totals the amount from filler words and matches found
+function totalMatches(fillerMatches, actualMatches) {
+  let returnedArray = copy(fillerMatches);
+  let actualMatchesIndex = 0;
+  let actualMatchesLessDuplicates = removeDuplicates(actualMatches);
+  console.log(actualMatchesLessDuplicates);
+  fillerMatches.forEach((match) => {
+    if (
+      match === null ||
+      actualMatchesLessDuplicates[actualMatchesIndex] === null
+    ) {
+      actualMatchesIndex++;
+      return;
+    }
+    returnedArray[actualMatchesIndex] +=
+      actualMatchesLessDuplicates[actualMatchesIndex].length;
+    actualMatchesIndex++;
+  });
+  return returnedArray;
+}
 
 // renders the results when the button is clicked
 function renderResults() {
@@ -138,6 +160,11 @@ function renderResults() {
     matchesFoundList,
     fillerMatchesCount
   );
+  let TotalMatches = totalMatches(
+    fillerMatchesLessActualMatches,
+    matchesFoundList
+  );
+  console.log(TotalMatches);
   let companyNameMatches = searchForCompanyName();
   const numOfWords = wordCounter();
   const metaCharLength = characterCounter(metaDescriptionString);
@@ -167,6 +194,10 @@ function renderResults() {
   ).textContent = `The Meta Description contains: ${metaCharLength} characters.`;
   document.querySelector(".resultsParagraphFillerNumbers").textContent =
     fillerMatchesLessActualMatches.join("\r\n");
+
+  TotalMatches.splice(0, 0, "TOTAL TIMES USED");
+  document.querySelector(".resultsParagraphTotal").textContent =
+    TotalMatches.join("\r\n");
 }
 
 // adds the event listener to the result button
